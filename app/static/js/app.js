@@ -9,6 +9,10 @@ const storageKey = "emailtriage-history";
 let lastResult = null;
 
 const byId = (id) => document.getElementById(id);
+const getCsrfToken = () => {
+  const tokenField = byId("csrf-token");
+  return tokenField ? tokenField.value : "";
+};
 
 function showLoading(isLoading) {
   const loader = byId("loading");
@@ -135,7 +139,7 @@ async function submitFeedback(correctLabel) {
   try {
     const response = await fetch("/feedback", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "X-CSRF-Token": getCsrfToken() },
       body: JSON.stringify(payload),
     });
     if (feedbackStatus) feedbackStatus.textContent = response.ok ? "Feedback registrado." : "Falha ao salvar feedback.";
@@ -271,7 +275,11 @@ function wireForm() {
           throw new Error(`Arquivo acima do limite de ${maxFileMb} MB.`);
         }
       }
-      const response = await fetch("/api/analyze", { method: "POST", body: data });
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "X-CSRF-Token": getCsrfToken() },
+        body: data,
+      });
       if (!response.ok) {
         const err = await response.json();
         throw new Error(err.detail || "Falha ao analisar");

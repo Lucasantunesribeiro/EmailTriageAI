@@ -67,6 +67,7 @@
             data-max-chars="{{ max_chars }}"
             data-max-file-mb="{{ max_file_mb }}"
           >
+            <input type="hidden" name="csrf_token" id="csrf-token" value="{{ csrf_token }}" />
             <label class="field">
               <span>Upload (.txt ou .pdf)</span>
               <input type="file" name="file" accept=".txt,.pdf" />
@@ -129,7 +130,7 @@
       </section>
     </div>
 
-    <script id="server-result" type="application/json">{{ result_json | safe }}</script>
-    <script src="/static/js/app.js"></script>
+    <script id="server-result" type="application/json" nonce="{{ csp_nonce }}">{{ result_payload | tojson }}</script>
+    <script src="/static/js/app.js" nonce="{{ csp_nonce }}"></script>
   </body>
 </html>

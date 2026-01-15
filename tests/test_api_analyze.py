@@ -4,6 +4,14 @@ from app.schemas.triage import EmailTriageResult
 from main import app
 
 
+def _get_csrf_token(client: TestClient) -> str:
+    response = client.get("/")
+    assert response.status_code == 200
+    token = response.cookies.get("csrf_token")
+    assert token
+    return token
+
+
 def test_api_analyze_text(monkeypatch) -> None:
     fake_result = EmailTriageResult(
         category="Produtivo",
@@ -23,7 +31,12 @@ def test_api_analyze_text(monkeypatch) -> None:
     )
 
     client = TestClient(app)
-    response = client.post("/api/analyze", data={"text_input": "Qual o status do pedido?"})
+    token = _get_csrf_token(client)
+    response = client.post(
+        "/api/analyze",
+        data={"text_input": "Qual o status do pedido?", "csrf_token": token},
+        headers={"X-CSRF-Token": token},
+    )
     assert response.status_code == 200
     payload = response.json()
     assert payload["result"]["category"] == "Produtivo"

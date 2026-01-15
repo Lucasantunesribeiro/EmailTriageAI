@@ -49,7 +49,11 @@ class AnalyzerService:
 
         logger.info(
             "Email analyzed",
-            extra={"hash": email_hash, "num_chars": stats["num_chars"]},
+            extra={
+                "hash": email_hash,
+                "num_chars": stats["num_chars"],
+                "source": source,
+            },
         )
 
         return AnalysisOutput(

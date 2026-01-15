@@ -17,13 +17,21 @@ class BaselineService:
         if not model_path.exists():
             logger.info("Baseline model not found")
             return None
-        return joblib.load(model_path)
+        try:
+            return joblib.load(model_path)
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Failed to load baseline model", extra={"error": str(exc)})
+            return None
 
     def predict(self, text_clean: str) -> Optional[Tuple[str, float]]:
         if not self.model or not text_clean.strip():
             return None
-        probabilities = self.model.predict_proba([text_clean])[0]
-        best_index = int(probabilities.argmax())
-        label = str(self.model.classes_[best_index])
-        confidence = float(probabilities[best_index])
-        return label, confidence
+        try:
+            probabilities = self.model.predict_proba([text_clean])[0]
+            best_index = int(probabilities.argmax())
+            label = str(self.model.classes_[best_index])
+            confidence = float(probabilities[best_index])
+            return label, confidence
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Baseline prediction failed", extra={"error": str(exc)})
+            return None

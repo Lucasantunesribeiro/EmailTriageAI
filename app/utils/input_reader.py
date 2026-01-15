@@ -2,8 +2,8 @@ from typing import Optional, Tuple
 
 from fastapi import UploadFile
 
-from app.config import settings
-from app.utils.pdf_reader import read_pdf
+from app.security.exceptions import UploadValidationError
+from app.security.upload_guard import extract_text_from_upload, validate_text_input
 
 
 async def extract_text_from_input(
@@ -11,19 +11,10 @@ async def extract_text_from_input(
     text_input: Optional[str],
 ) -> Tuple[str, Optional[str]]:
     if file and file.filename:
-        filename = file.filename.lower()
-        if not (filename.endswith(".txt") or filename.endswith(".pdf")):
-            raise ValueError("Tipo de arquivo invalido. Use .txt ou .pdf")
-        file_bytes = await file.read()
-        if len(file_bytes) > settings.max_file_bytes:
-            raise ValueError("Arquivo maior que 2MB")
-        if filename.endswith(".pdf"):
-            content = read_pdf(file_bytes)
-        else:
-            content = file_bytes.decode("utf-8", errors="ignore")
+        content, filename = await extract_text_from_upload(file)
         return content, filename
 
     if text_input:
-        return text_input, None
+        return validate_text_input(text_input), None
 
-    raise ValueError("Envie um arquivo ou cole o texto")
+    raise UploadValidationError("Envie um arquivo ou cole o texto.")

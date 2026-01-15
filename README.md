@@ -44,8 +44,14 @@ Acesse: http://localhost:8000
 ## Variaveis de ambiente
 Crie um arquivo `.env` baseado no `.env.example`:
 - `GEMINI_API_KEY`: chave da API do Gemini
-- `GEMINI_MODEL`: modelo (ex.: gemini-1.5-flash)
+- `GEMINI_MODEL`: modelo (ex.: gemini-2.5-flash)
 - `LOG_LEVEL`: nivel do log
+- `ENVIRONMENT`: development ou production
+- `SESSION_SECRET`: segredo para cookies de sessao/CSRF
+- `ALLOWED_HOSTS`: allowlist de hosts separados por virgula
+- `CORS_ALLOW_ORIGINS`: origens permitidas (opcional)
+- `FORCE_HTTPS`: redireciona HTTP para HTTPS quando true
+- `ENABLE_HSTS`: adiciona HSTS quando true (ou em production)
 
 ## Treinar baseline
 ```bash
@@ -66,6 +72,30 @@ Comandos:
 ## Testes
 ```bash
 pytest
+```
+
+## Seguranca (resumo)
+- Headers de seguranca com CSP, X-Frame-Options, nosniff e Referrer-Policy.
+- CSRF obrigatorio em todos os POSTs (form + header).
+- Upload seguro (tamanho, magic bytes, extensoes, limite de paginas PDF).
+- Rate limit por IP e limite de body para reduzir DoS.
+- Timeouts para leitura de PDF e chamada ao LLM.
+- Prompt injection mitigado com regras no prompt + sinais de risco.
+
+## Threat model (OWASP)
+- OWASP Top 10 + OWASP API Top 10: validacao de entrada, headers, CORS e rate limit.
+- File upload: bloqueio de extensoes suspeitas e validacao de magic bytes.
+- XSS/CSRF: CSP forte, autoescape do Jinja e tokens CSRF.
+- Supply chain: dependencias fixadas + auditoria automatizavel.
+
+## Auditoria de seguranca
+```bash
+pip install -r requirements-dev.txt
+./scripts/security_audit.sh
+```
+No Windows:
+```powershell
+./scripts/security_audit.ps1
 ```
 
 ## Links de entrega (preencher)
