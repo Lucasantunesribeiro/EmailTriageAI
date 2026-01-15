@@ -99,9 +99,9 @@ No Windows:
 ```
 
 ## Links de entrega (preencher)
-- Repositorio: [link publico]
-- Video demonstrativo: [link do YouTube]
-- Deploy: [link da aplicacao]
+- Repositorio: https://github.com/Lucasantunesribeiro/EmailTriageAI
+- Video demonstrativo: 
+- Deploy: http://100.48.50.86/
 
 ## Observacoes
 - PDFs sao lidos com PyPDF2 e podem falhar em documentos com texto escaneado.
