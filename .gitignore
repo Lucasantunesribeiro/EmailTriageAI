@@ -1,0 +1,43 @@
+# Ignore everything by default
+*
+
+# Allow directories so whitelisted files can be tracked
+!*/
+
+# Keep git settings and docs
+!/.gitignore
+!/README.md
+!/LICENSE
+!/requirements*.txt
+!/render.yaml
+
+# Allow code and interface assets
+!**/*.py
+!**/*.ipynb
+!**/*.html
+!**/*.css
+!**/*.js
+!**/*.png
+!**/*.jpg
+!**/*.jpeg
+!**/*.gif
+!**/*.svg
+!**/*.webp
+!**/*.ico
+
+# Allow sample data
+!/data/**
+!/examples/**
+
+# Re-ignore local/dev artifacts and secrets
+.venv/
+__pycache__/
+*.pyc
+.env
+models/*.joblib
+*.log
+.vscode/
+.idea/
+estudos.md
+roteiro
+instrucoes_deploy.md

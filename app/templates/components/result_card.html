@@ -1,0 +1,96 @@
+<div class="result-card" id="result-card">
+  <div class="result-banner">
+    <span class="pill" id="result-category-pill">
+      {{ result.category if result else "Sem resultado" }}
+    </span>
+    <span class="pill muted" id="result-action-pill">
+      {{ "Acao necessaria" if result and result.category == "Produtivo" else "Sem acao imediata" if result else "--" }}
+    </span>
+    <span class="pill outline" id="result-review-pill">
+      {{ "Revisao humana" if result and result.needs_human_review else "Auto aprovado" if result else "--" }}
+    </span>
+  </div>
+  <div class="result-top">
+    <div>
+      <p class="label">Categoria</p>
+      <p class="value" id="result-category">{{ result.category if result else "--" }}</p>
+    </div>
+    <div>
+      <p class="label">Confianca</p>
+      <p class="value" id="result-confidence">
+        {{ "%.2f" | format(result.confidence) if result else "--" }}
+      </p>
+      <div class="confidence-meter">
+        <div class="confidence-fill" id="result-confidence-fill"></div>
+      </div>
+    </div>
+    <div>
+      <p class="label">Fonte</p>
+      <p class="value" id="result-source">{{ result_meta.source if result_meta else "--" }}</p>
+    </div>
+  </div>
+
+  <div class="result-block">
+    <p class="label">Acao recomendada</p>
+    <p class="summary" id="result-action">
+      {% if result %}
+      {{ "Priorize resposta com prazo ou status." if result.category == "Produtivo" else "Responda de forma cordial e encerre." }}
+      {% else %}
+      --
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="result-block">
+    <p class="label">Resumo curto</p>
+    <p class="summary" id="result-summary">{{ result.summary if result else "" }}</p>
+  </div>
+
+  <div class="result-block">
+    <p class="label">Tags</p>
+    <div class="tags" id="result-tags">
+      {% if result %}
+      {% for tag in result.tags %}
+      <span class="tag">{{ tag }}</span>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="result-block">
+    <p class="label">Revisao humana</p>
+    <p class="summary" id="result-review">
+      {{ "Sim" if result and result.needs_human_review else "Nao" }}
+    </p>
+    <p class="label">Motivos</p>
+    <ul class="reasons" id="result-reasons">
+      {% if result %}
+      {% for reason in result.reasons %}
+      <li>{{ reason }}</li>
+      {% endfor %}
+      {% endif %}
+    </ul>
+  </div>
+
+  <div class="result-block">
+    <p class="label">Resposta sugerida</p>
+    <textarea id="suggested-reply" rows="6">{{ result.suggested_reply if result else "" }}</textarea>
+    <div class="actions">
+      <button type="button" id="copy-reply" class="btn ghost">Copiar resposta</button>
+    </div>
+  </div>
+
+  <div class="result-block">
+    <p class="label">Feedback</p>
+    <div class="feedback" data-email-hash="{{ result_meta.email_hash if result_meta else "" }}">
+      <button type="button" class="btn success" id="feedback-correct">Classificacao correta</button>
+      <button type="button" class="btn danger" id="feedback-wrong">Classificacao errada</button>
+      <div class="feedback-choice hidden" id="feedback-choice">
+        <p>Qual e a categoria correta?</p>
+        <button type="button" class="btn ghost" data-correct="Produtivo">Produtivo</button>
+        <button type="button" class="btn ghost" data-correct="Improdutivo">Improdutivo</button>
+      </div>
+      <p class="feedback-status" id="feedback-status"></p>
+    </div>
+  </div>
+</div>

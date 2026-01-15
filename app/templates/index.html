@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EmailTriageAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Triagem inteligente</p>
+          <h1>EmailTriageAI</h1>
+          <p class="subtitle">
+            Classifique emails corporativos, gere respostas e guarde um historico
+            leve para ajustes.
+          </p>
+          <div class="hero-chips">
+            <span class="chip">Produtivo = acao</span>
+            <span class="chip">Improdutivo = ruido</span>
+            <span class="chip">Resposta automatica</span>
+          </div>
+        </div>
+        <div class="hero-card">
+          <p class="hero-label">Objetivo</p>
+          <p class="hero-text">
+            Separar rapido o que exige acao do que e apenas ruido.
+          </p>
+          <ul class="hero-list">
+            <li>Analise em segundos com IA</li>
+            <li>Feedback rapido para ajuste fino</li>
+            <li>Sem banco de dados obrigatorio</li>
+          </ul>
+        </div>
+      </header>
+
+      <section class="steps">
+        <div class="step-card">
+          <p class="step-title">1. Envie o email</p>
+          <p class="step-text">Upload de .txt/.pdf ou texto colado.</p>
+        </div>
+        <div class="step-card">
+          <p class="step-title">2. IA classifica</p>
+          <p class="step-text">Produtivo vs. Improdutivo com confianca.</p>
+        </div>
+        <div class="step-card">
+          <p class="step-title">3. Resposta pronta</p>
+          <p class="step-text">Sugestao objetiva em PT-BR.</p>
+        </div>
+      </section>
+
+      <main class="grid">
+        <section class="panel">
+          <h2>Entrada do email</h2>
+          <form
+            id="triage-form"
+            method="post"
+            action="/analyze"
+            enctype="multipart/form-data"
+            data-max-chars="{{ max_chars }}"
+            data-max-file-mb="{{ max_file_mb }}"
+          >
+            <label class="field">
+              <span>Upload (.txt ou .pdf)</span>
+              <input type="file" name="file" accept=".txt,.pdf" />
+            </label>
+            <div class="file-meta" id="file-meta">Nenhum arquivo selecionado.</div>
+            <label class="field">
+              <span>Ou cole o texto</span>
+              <textarea
+                id="text-input"
+                name="text_input"
+                rows="8"
+                placeholder="Cole aqui o email para analisar"
+              ></textarea>
+            </label>
+            <div class="input-meta">
+              <span id="char-count">0 / {{ max_chars }} caracteres</span>
+              <span>Limite de arquivo: {{ max_file_mb }} MB</span>
+            </div>
+            <p class="hint">Se anexar arquivo, o texto colado sera ignorado.</p>
+            <div class="actions">
+              <button type="submit" class="btn primary" id="submit-btn">Analisar email</button>
+              <button type="button" id="clear-btn" class="btn ghost">Limpar</button>
+            </div>
+          </form>
+          <p class="notice">
+            O conteudo completo do email nao e armazenado. Apenas metadados e feedback.
+          </p>
+
+          <div class="examples">
+            <p>Exemplos rapidos</p>
+            <div class="example-buttons" id="example-buttons"></div>
+          </div>
+
+          <div id="client-error" class="alert hidden" role="alert" aria-live="polite"></div>
+
+          {% if error %}
+          <div class="alert">{{ error }}</div>
+          {% endif %}
+        </section>
+
+        <section class="panel">
+          <h2>Resultado</h2>
+          <div
+            id="result-section"
+            class="result-section {% if not result %}hidden{% endif %}"
+            aria-live="polite"
+          >
+            {% include "components/result_card.html" %}
+          </div>
+          <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Analisando email...</p>
+          </div>
+        </section>
+      </main>
+
+      <section class="panel history-panel">
+        <h2>Historico da sessao</h2>
+        {% include "components/history.html" %}
+      </section>
+    </div>
+
+    <script id="server-result" type="application/json">{{ result_json | safe }}</script>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>
