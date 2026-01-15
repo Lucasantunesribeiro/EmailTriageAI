@@ -98,9 +98,9 @@ No Windows:
 ./scripts/security_audit.ps1
 ```
 
-## Links de entrega (preencher)
+## Links de entrega 
 - Repositorio: https://github.com/Lucasantunesribeiro/EmailTriageAI
-- Video demonstrativo: 
+- Video demonstrativo: https://www.youtube.com/watch?v=snQZ3HVRb98
 - Deploy: http://100.48.50.86/
 
 ## Observacoes
