@@ -100,7 +100,7 @@ No Windows:
 
 ## Links de entrega 
 - Repositorio: https://github.com/Lucasantunesribeiro/EmailTriageAI
-- Video demonstrativo: https://www.youtube.com/watch?v=snQZ3HVRb98
+- Video demonstrativo: https://www.youtube.com/watch?v=toFOr5ZTWUQ
 - Deploy: http://100.48.50.86/
 
 ## Observacoes
